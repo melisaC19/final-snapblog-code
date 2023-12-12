@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2 class="mt-4">Feed</h2>
+
+            {% if g.user %}
+                <h3>User: {{ g.user[1] }}</h3>
+                <a href="/logout" class="btn btn-outline-primary">Logout</a>
+                <div class="mt-3">
+                    <form method="post" action="/tweet">
+                        <div class="input-group mb-3">
+                            <input type="text" name="tweet" class="form-control" placeholder="Tweet something" />
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </div>
+                    </form>
+                </div>
+            {% else %}
+                <a href="/login" class="btn btn-outline-primary">Login</a>
+            {% endif %}
+
+            <!-- Tweets loop -->
+            {% for tweet in tweets %}
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><b>{{ tweet[5] }}</b></h5>
+                        {% if tweet[2]|length > 140 %}
+                            <p class="card-text">{{ tweet[2][:140] }}...</p>
+                        {% else %}
+                            <p class="card-text">{{ tweet[2] }}</p>
+                        {% endif %}
+                        <p class="card-text">
+                            {% if tweet[3] > 0 %}
+                                <span>&#129505;</span>
+                            {% else %}
+                                <span>&#128153;</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <!-- Pagination links -->
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            {% for i in range(1, total_pages + 1) %}
+                                <li class="page-item {% if i == page %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}"
